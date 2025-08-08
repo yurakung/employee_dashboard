@@ -15,22 +15,21 @@ def process_daily_reports(uploaded_files):
     """
     data = []
     
-    # 📝 ตรวจสอบและประมวลผลไฟล์ที่อัปโหลด
+    # ตรวจสอบและประมวลผลไฟล์ที่อัปโหลด
     if not uploaded_files:
         st.warning("⚠️ กรุณาอัปโหลดไฟล์ Daily Report")
         return pd.DataFrame()
 
     for file in uploaded_files:
         try:
-            # 💡 ใช้ io.BytesIO เพื่อให้ pandas อ่านไฟล์จาก Streamlit ได้โดยตรง
+            #  ใช้ io.BytesIO เพื่อให้ pandas อ่านไฟล์จาก Streamlit ได้โดยตรง
             df = pd.read_excel(io.BytesIO(file.getvalue()))
             
             filename = file.name
-            # 🔍 ปรับแก้ regex ให้ยืดหยุ่นขึ้น
+            
             match = re.search(r"Daily report_(\d+)_?([^.]*)\.xls", filename, re.IGNORECASE)
             if match:
-                date_str = match.group(1)
-                # 💡 ใช้ .strip() เพื่อลบช่องว่างที่ไม่ต้องการ
+                date_str = match.group(1) 
                 team_member = match.group(2).replace("_", " ").strip()
             else:
                 date_str = "0"
@@ -96,7 +95,7 @@ def merge_and_create_dashboard(daily_df, new_emp_df):
 
 # --- UI (User Interface) ของ Streamlit ---
 
-# 💻 ส่วนอัปโหลดไฟล์
+# ส่วนอัปโหลดไฟล์
 col1, col2 = st.columns(2)
 
 with col1:
@@ -114,10 +113,10 @@ with col2:
         type=["xls", "xlsx"]
     )
 
-# 🚦 ปุ่มประมวลผล
+# ปุ่มประมวลผล
 if st.button("🚀 สร้าง Dashboard"):
     if uploaded_daily_files and uploaded_new_emp_file:
-        # 🤖 ประมวลผลข้อมูล
+        # ประมวลผลข้อมูล
         with st.spinner("🔄 กำลังประมวลผลข้อมูล..."):
             daily_df = process_daily_reports(uploaded_daily_files)
             new_emp_df = process_new_employees(uploaded_new_emp_file)
@@ -131,7 +130,7 @@ if st.button("🚀 สร้าง Dashboard"):
                 st.subheader("📊 ตารางสรุป Dashboard")
                 st.dataframe(dashboard, use_container_width=True) # แสดง DataFrame บนเว็บ
                 
-                # 📥 เพิ่มปุ่มดาวน์โหลด
+                # ปุ่มดาวน์โหลด
                 excel_buffer = io.BytesIO()
                 dashboard.to_excel(excel_buffer, index=False, engine='xlsxwriter')
                 st.download_button(
